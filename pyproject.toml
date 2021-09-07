@@ -5,10 +5,14 @@ description = ""
 authors = ["James Morrill <james.morrill.6@gmail.com>"]
 
 [tool.poetry.dependencies]
-python = "^3.9"
+python = ">=3.7,<=3.9"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
+
+[tool.poetry.extras]
+numpy = "^1.21.2"
+psycopg2 = "^2.9.1"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
