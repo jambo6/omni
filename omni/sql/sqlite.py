@@ -1,17 +1,12 @@
-import sqlite3 as sqlite
 from pathlib import Path
-from typing import Any, Union, no_type_check
+from typing import Union
 
+from base import CommitAndCloseBase
 
-class CommitAndCloseBase:
-    """Most will be finalised with commit and close, so we make into a base class."""
+from omni import check_soft_dependencies
 
-    connection: Any
-
-    @no_type_check
-    def __exit__(self, type_, value, traceback) -> None:
-        self.connection.commit()
-        self.connection.close()
+check_soft_dependencies("sqlite3")
+import sqlite3  # noqa
 
 
 class SQLite(CommitAndCloseBase):
@@ -33,7 +28,7 @@ class SQLite(CommitAndCloseBase):
         self.file = file
         self.check_same_thread = check_same_thread
 
-    def __enter__(self) -> sqlite.Cursor:
-        self.connection = sqlite.connect(self.file, check_same_thread=self.check_same_thread)
-        self.connection.row_factory = sqlite.Row
+    def __enter__(self) -> sqlite3.Cursor:
+        self.connection = sqlite3.connect(self.file, check_same_thread=self.check_same_thread)
+        self.connection.row_factory = sqlite3.Row
         return self.connection.cursor()

@@ -1,7 +1,6 @@
-import sqlite3
 from typing import Optional
 
-from sqlite import CommitAndCloseBase
+from base import CommitAndCloseBase
 
 from omni import check_soft_dependencies
 
@@ -21,6 +20,6 @@ class PSQL(CommitAndCloseBase):
         self.user = user
         self.password = password
 
-    def __enter__(self) -> sqlite3.Cursor:
+    def __enter__(self) -> psycopg2:
         self.connection = psycopg2.connect(database=self.database, user=self.user, password=self.password)
         return self.connection.cursor()
