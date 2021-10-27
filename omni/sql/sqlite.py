@@ -1,9 +1,9 @@
 from pathlib import Path
 from typing import Union
 
-from base import CommitAndCloseBase
-
 from omni import check_soft_dependencies
+
+from .base import CommitAndCloseBase
 
 check_soft_dependencies("sqlite3")
 import sqlite3  # noqa

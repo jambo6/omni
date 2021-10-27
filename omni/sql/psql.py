@@ -1,8 +1,8 @@
 from typing import Optional
 
-from base import CommitAndCloseBase
-
 from omni import check_soft_dependencies
+
+from .base import CommitAndCloseBase
 
 check_soft_dependencies("psycopg2")
 import psycopg2  # noqa
