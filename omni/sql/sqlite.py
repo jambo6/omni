@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Union
+from typing import Union, Optional
 
 from omni import check_soft_dependencies
 
@@ -19,7 +19,9 @@ class SQLite(CommitAndCloseBase):
     ```
     """
 
-    def __init__(self, file: Union[Path, str], check_same_thread: bool = False) -> None:
+    def __init__(
+        self, file: Union[Path, str], check_same_thread: bool = False, isolation_level: Optional[int] = None
+    ) -> None:
         """
         Arguments:
             file: The location of the sqlite database to connect to.
@@ -27,8 +29,11 @@ class SQLite(CommitAndCloseBase):
         """
         self.file = file
         self.check_same_thread = check_same_thread
+        self.isolation_level = isolation_level
 
     def __enter__(self) -> sqlite3.Cursor:
-        self.connection = sqlite3.connect(self.file, check_same_thread=self.check_same_thread)
+        self.connection = sqlite3.connect(
+            self.file, check_same_thread=self.check_same_thread, isolation_level=self.isolation_level
+        )
         self.connection.row_factory = sqlite3.Row
         return self.connection.cursor()
