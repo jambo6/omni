@@ -4,17 +4,11 @@ from pathlib import Path
 from typing import Any, Union, no_type_check
 
 
-def read_text_file(filename: str) -> str:
-    """Read a text file into a string"""
-    with open(filename) as file:
-        output = file.read()
-    return output
-
-
-def make_directory_if_not_exists(directory: Union[Path, str]) -> None:
-    """Makes a directory if one does not already exist at the specified location."""
+def make_directory_if_not_exists(directory: Union[Path, str]) -> str:
+    """Makes a directory if one does not already exist at the specified location, returns the directory string."""
     if not os.path.isdir(directory):
         os.mkdir(directory)
+    return directory
 
 
 def unpack_list_of_lists(list_of_lists: list[list[Any]]) -> list[Any]:
