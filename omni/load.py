@@ -46,7 +46,8 @@ def load_jsonl(path: Union[str, Path]) -> list[dict[Any, Any]]:
 def save_jsonl(jsonl_data: list[dict[Any, Any]], output_path: Union[str, Path]) -> None:
     """Save a JSONL file."""
     with open(output_path, "w") as f:
-        f.write("\n".join(json.dump(line, f) for line in jsonl_data))
+        for line in jsonl_data:
+            f.write(json.dumps(line) + "\n")
 
 
 def load_pickle(path: Union[str, Path]) -> Any:
