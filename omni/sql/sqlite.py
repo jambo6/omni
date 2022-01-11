@@ -1,12 +1,30 @@
 from pathlib import Path
+from typing import Any
 from typing import Union, Optional
 
 from omni import check_soft_dependencies
-
 from .base import CommitAndCloseBase
 
 check_soft_dependencies("sqlite3")
 import sqlite3  # noqa
+
+
+def executemany_begin_wrap(cursor: sqlite3.Cursor, query: str, data: list[Any]) -> None:
+    """Wrap execute many in begin commit to improve speed.
+
+    If you are using `isolation_level=None` then you should use this!!! In such cases if execute many is not wrapped
+    in BEGIN; {}; COMMIT; then it seems to run each line independently like a for loop. If we include the begin
+    commit then it avoids this. See:
+        https://stackoverflow.com/questions/35013453/apsw-or-sqlite3-very-slow-insert-on-executemany
+
+    Arguments:
+        cursor: The sqlite cursor object.
+        query: The query to include.
+        data: The list of values to execute.
+    """
+    cursor.execute("begin transaction")
+    cursor.executemany(query, data)
+    cursor.execute("commit")
 
 
 class SQLite(CommitAndCloseBase):
