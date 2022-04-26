@@ -1,6 +1,7 @@
-import joblib
 import multiprocessing
 from typing import Any, Callable
+
+import joblib
 
 
 class UnavailableResourceError(Exception):
@@ -35,15 +36,13 @@ def parallel_for_loop(
 
     # In parallel
     if num_cpus > 1:
-        if backend == 'joblib':
-            results = joblib.Parallel(n_jobs=num_cpus)(
+        if backend == "joblib":
+            results = joblib.Parallel(n_jobs=num_cpus)(joblib.delayed(unpack_func)(arg) for arg in args)
+        elif backend == "threading":
+            results = joblib.Parallel(n_jobs=num_cpus, backend="threading")(
                 joblib.delayed(unpack_func)(arg) for arg in args
             )
-        elif backend == 'threading':
-            results = joblib.Parallel(n_jobs=num_cpus, backend='threading')(
-                joblib.delayed(unpack_func)(arg) for arg in args
-            )
-        elif backend == 'multiprocessing':
+        elif backend == "multiprocessing":
             with multiprocessing.Pool(num_cpus) as pool:
                 results = pool.starmap(func, args)
         else:
